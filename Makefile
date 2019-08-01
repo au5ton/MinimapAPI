@@ -7,5 +7,5 @@ ci:
 	 -Dfile=./target/MinimapAPI-1.0-SNAPSHOT.jar \
 	 -Dpackaging=jar \
 	 -DgeneratePom=true \
-	 -DlocalRepositoryPath=./repo \
+	 -DlocalRepositoryPath=./maven \
 	 -DcreateChecksum=true \
