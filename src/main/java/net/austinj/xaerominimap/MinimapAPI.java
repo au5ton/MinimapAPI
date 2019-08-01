@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -196,7 +197,7 @@ public class MinimapAPI implements Listener {
 
     public Collection<String> getIdentifiers(Player player) {
         Collection<String> identifiers = new ArrayList<String>();
-        for (Waypoint wp : (Collection)this.players.get(player)) {
+        for (Waypoint wp : (Collection<Waypoint>)this.players.get(player)) {
             identifiers.add(wp.getIdentifier());
         }
         return identifiers;

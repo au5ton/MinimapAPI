@@ -17,7 +17,7 @@ public class Waypoint {
     private final MinimapAPI api;
 
     public Waypoint(Location loc, String identifier, String tag, char symbol, ChatColor color, boolean useYaw) {
-        this.MAX_LENGTH = 40;
+        //this.MAX_LENGTH = 40;
 
         this.api = MinimapAPI.getInstance();
 
