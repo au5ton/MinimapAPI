@@ -15,7 +15,7 @@ commit_website_files() {
 }
 
 upload_files() {
-  git remote add origin-pages https://${GH_TOKEN}@github.com/au5ton/MinimapAPI.git > /dev/null 2>&1
+  git remote add origin-pages https://au5ton:${GH_TOKEN}@github.com/au5ton/MinimapAPI.git > /dev/null 2>&1
   # overwrite current "gh-pages" branch
   git push -f --quiet --set-upstream origin-pages gh-pages 
 }
