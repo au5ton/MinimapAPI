@@ -1,4 +1,10 @@
 language: java
 jdk:
-- oraclejdk7
-- openjdk6
+- openjdk8
+script:
+- make ci
+after_success:
+- .travis/push.sh
+env:
+  global:
+    secure: QqRMwlY5Y9bxZmYHUgqUuhvmUrp/+A3JLYn8sO9d/ELOeC1bktARNvRymWqpNVvVtfnOWez93oN1FwleSfrCHprubCCIMlI7CKna3+Oqze6lKlur9XyPeDofLR5FSmVccWQnEgj+5pnkj8JNAD/vRjxU9DyTY1Mfz9snvdSpYJoSma/QhdKSvAxQucuS3ufdokeZpMXx0tzaqZdYAjGPtmZSl3UkxCsb45n8Adh4E/GCqty9h9QA+DcYU+RYUPbm61hvpBUMRPqtbAd/XltyxcotWVFH5iFieL+Dg3sSyAzzoLlNE4Qwu4vmooTd7R9j3GnKNJNrMbVrfmd04ANOCLSA+DeZ+aenUkgUkBYLNY6OZs8wMuHUSCtqPY9zOKKbVuu3JCt9iHS0A/nrVXbkLKC/riHJrhmdZgT7vyMB9uUW/PFp/Q7up4lKSP9f2kQeg6r3pAbCGZrd/fSrPiAOOpD/VtM+mLjLN+NotqjaLpXsyFO6ItOAgoyQbpUe/zGV08r1KmdHYFFuGPKbfTwCnk1+BOgmP6wd0BAAe9CsEDWZyNHpnOTw+IcX9yr/58gc5q2qwzXv7QCD4jQpjosBycWn2x4mIRBFXOmW8c/5TUmMQbmF4FJNYfYKmGsvbrZ+mxpDJXnfowX37FI432PODa05XYyBKTvcPaB6auaZhYM=
