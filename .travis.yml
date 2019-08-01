@@ -5,7 +5,6 @@ script:
 - make ci
 deploy:
   provider: pages
-  local_dir: ./maven
   target_branch: gh-pages
   skip_cleanup: true
   github_token: $GH_TOKEN  # Set in the settings page of your repository, as a secure variable
