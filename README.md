@@ -18,6 +18,6 @@ Original mod: https://www.spigotmc.org/resources/minimapapi.35354/
 <dependency>
     <groupId>net.austinj.xaerominimap</groupId>
     <artifactId>MinimapAPI</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
