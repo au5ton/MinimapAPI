@@ -9,8 +9,8 @@ public class Main extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, CHANNEL_NAME);
-        Bukkit.getMessenger().registerIncomingPluginChannel(this, CHANNEL_NAME, new PacketHandler());
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "xaerominimap:spigot_api");
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, "xaerominimap:spigot_api", new PacketHandler());
         Bukkit.getPluginManager().registerEvents(MinimapAPI.getInstance(), this);
         
         MinimapAPI.getInstance().check();

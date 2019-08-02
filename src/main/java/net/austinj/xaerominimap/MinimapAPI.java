@@ -155,7 +155,7 @@ public class MinimapAPI implements Listener {
                 break;
             }
         } 
-        player.sendPluginMessage(Main.getInstance(), CHANNEL_NAME, b.toByteArray());
+        player.sendPluginMessage(Main.getInstance(), "xaerominimap:spigot_api", b.toByteArray());
     }
 
     void sendMessage(Player player, World world) throws IOException {
@@ -167,7 +167,7 @@ public class MinimapAPI implements Listener {
         out.writeUTF(world.getUID().toString());
         out.writeUTF(world.getName());
 
-        player.sendPluginMessage(Main.getInstance(), CHANNEL_NAME, b.toByteArray());
+        player.sendPluginMessage(Main.getInstance(), "xaerominimap:spigot_api", b.toByteArray());
     }
 
     Waypoint searchWaypoint(String identifier) {
