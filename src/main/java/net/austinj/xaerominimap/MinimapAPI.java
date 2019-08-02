@@ -20,6 +20,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class MinimapAPI implements Listener {
+    protected static final String CHANNEL_NAME = "xaerominimap:spigot_api";
+
     private static MinimapAPI instance = null;
     /**
      * Does a thing
@@ -153,7 +155,7 @@ public class MinimapAPI implements Listener {
                 break;
             }
         } 
-        player.sendPluginMessage(Main.getInstance(), "XaeroMinimap", b.toByteArray());
+        player.sendPluginMessage(Main.getInstance(), CHANNEL_NAME, b.toByteArray());
     }
 
     void sendMessage(Player player, World world) throws IOException {
@@ -165,7 +167,7 @@ public class MinimapAPI implements Listener {
         out.writeUTF(world.getUID().toString());
         out.writeUTF(world.getName());
 
-        player.sendPluginMessage(Main.getInstance(), "XaeroMinimap", b.toByteArray());
+        player.sendPluginMessage(Main.getInstance(), CHANNEL_NAME, b.toByteArray());
     }
 
     Waypoint searchWaypoint(String identifier) {
