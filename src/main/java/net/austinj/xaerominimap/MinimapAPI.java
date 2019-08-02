@@ -21,6 +21,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class MinimapAPI implements Listener {
     private static MinimapAPI instance = null;
+    /**
+     * Does a thing
+     */
     public static MinimapAPI getInstance() {
         if (instance == null) {
             instance = new MinimapAPI();
