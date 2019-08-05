@@ -17,67 +17,79 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class MinimapAPI {
-    private static JavaPlugin plugin;
-    public static final String CHANNEL_NAME = "xaerominimap:spigot_api";
-
-    // For other classes in our library
-    public static JavaPlugin getPlugin() {
-        return plugin;
-    }
-
-    // This method must not be used any where in the library!
-    public static void setPlugin(JavaPlugin plugin) {
-        MinimapAPI.plugin = plugin;
-        Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, CHANNEL_NAME);
-        Bukkit.getMessenger().registerIncomingPluginChannel(plugin, CHANNEL_NAME, new PacketHandler());
-        Bukkit.getPluginManager().registerEvents(new MapEventListener(), plugin);
-
-        MinimapAPI.heartbeat();
+public class MinimapAPI implements Listener {
+    private static MinimapAPI instance = null;
+    public static MinimapAPI getInstance() {
+        if (instance == null) {
+            instance = new MinimapAPI();
+        }
+        return instance;
     }
 
     static int id = 0;
     static Collection<Player> valid = new ArrayList();
     static Collection<Waypoint> waypoints = new ArrayList();
     static HashMap<Player, Integer> timer = new HashMap();
-    static HashMap<Player, Collection<Waypoint>> players = new HashMap(); // formerly private
+    private HashMap<Player, Collection<Waypoint>> players = new HashMap();
+    
+    private final int TIMEOUT = 5;
 
-    // Run this heartbeat every 20 ticks with a delay of 100 ticks before starting
-    static void heartbeat() {
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) { timer.put(e.getPlayer(), Integer.valueOf(0)); }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        valid.remove(e.getPlayer());
+        timer.remove(e.getPlayer());
+        this.players.remove(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onWorldSwitch(PlayerChangedWorldEvent e) {
+        if (valid.contains(e.getPlayer())) {
+            try {
+                sendMessage(e.getPlayer(), e.getPlayer().getWorld());
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } 
+        }
+    }
+
+    protected void check() { 
         (new BukkitRunnable() {
             public void run() {
-                if (timer.isEmpty())
+                if (MinimapAPI.timer.isEmpty())
                     return; 
-                for (Object o : timer.entrySet()) {
+                for (Object o : MinimapAPI.timer.entrySet()) {
                     Map.Entry thisEntry = (Map.Entry)o;
                     Player key = (Player)thisEntry.getKey();
                     Integer value = (Integer)thisEntry.getValue();
 
-                    if (value.intValue() == 5) timer.remove(key);
+                    if (value.intValue() == 5) MinimapAPI.timer.remove(key);
 
-                    timer.put(key, Integer.valueOf(value.intValue() + 1));
+                    MinimapAPI.timer.put(key, Integer.valueOf(value.intValue() + 1));
                 } 
             }
-        }).runTaskTimer(getPlugin(), 100L, 20L); 
+        }).runTaskTimer(Main.getInstance(), 100L, 20L); 
     }
 
-    static void sendWaypoint(Waypoint waypoint, Collection<Player> players) {
+    public void sendWaypoint(Waypoint waypoint, Collection<Player> players) {
         for (Player player : players) {
             sendWaypoint(waypoint, player);
         }
     }
 
-    static void sendWaypoint(final Waypoint waypoint, final Player player) {
+
+    public void sendWaypoint(final Waypoint waypoint, final Player player) {
         if (!valid.contains(player)) {
             if (timer.containsKey(player)) {
                 (new BukkitRunnable() {
                     public void run() {
-                        MinimapAPI.sendWaypoint(waypoint, player);
+                        MinimapAPI.this.sendWaypoint(waypoint, player);
                     }
-                }).runTaskLater(getPlugin(), 100L);
+                }).runTaskLater(Main.getInstance(), 100L);
             }
 
             return;
@@ -95,15 +107,13 @@ public class MinimapAPI {
         } 
     }
 
-    // asdasd
-
-    static void removeWaypoint(Waypoint waypoint, Collection<Player> players) {
+    public void removeWaypoint(Waypoint waypoint, Collection<Player> players) {
         for (Player player : players) {
             removeWaypoint(waypoint, player);
         }
     }
 
-    static void removeWaypoint(Waypoint waypoint, Player player) {
+    public void removeWaypoint(Waypoint waypoint, Player player) {
         try {
             sendMessage(player, waypoint, Operation.REMOVE);
         } catch (IOException e) {
@@ -112,7 +122,7 @@ public class MinimapAPI {
         ((Collection)this.players.get(player)).remove(waypoint);
     }
 
-    static void sendMessage(Player player, Waypoint waypoint, Operation op) throws IOException {
+    private void sendMessage(Player player, Waypoint waypoint, Operation op) throws IOException {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
         
@@ -140,10 +150,10 @@ public class MinimapAPI {
                 break;
             }
         } 
-        player.sendPluginMessage(Main.getInstance(), "xaerominimap:spigot_api", b.toByteArray());
+        player.sendPluginMessage(Main.getInstance(), "XaeroMinimap", b.toByteArray());
     }
 
-    static void sendMessage(Player player, World world) throws IOException {
+    void sendMessage(Player player, World world) throws IOException {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(b);
 
@@ -152,17 +162,17 @@ public class MinimapAPI {
         out.writeUTF(world.getUID().toString());
         out.writeUTF(world.getName());
 
-        player.sendPluginMessage(Main.getInstance(), "xaerominimap:spigot_api", b.toByteArray());
+        player.sendPluginMessage(Main.getInstance(), "XaeroMinimap", b.toByteArray());
     }
 
-    static Waypoint searchWaypoint(String identifier) {
+    Waypoint searchWaypoint(String identifier) {
         for (Waypoint wp : waypoints) {
             if (wp.getIdentifier().equals(identifier)) return wp; 
         } 
         return null;
     }
 
-    static Waypoint getWaypoint(String identifier) {
+    public Waypoint getWaypoint(String identifier) {
         Waypoint w = searchWaypoint(identifier);
         if (w != null) {
             return w;
@@ -171,7 +181,7 @@ public class MinimapAPI {
         return null;
     }
 
-    static void deleteWaypoint(Waypoint waypoint) {
+    public void deleteWaypoint(Waypoint waypoint) {
         for (Object o : this.players.entrySet()) {
             Map.Entry entry = (Map.Entry)o;
             Collection<Waypoint> value = (Collection)entry.getValue();
@@ -185,7 +195,7 @@ public class MinimapAPI {
         waypoints.remove(waypoint);
     }
 
-    static Collection<String> getIdentifiers(Player player) {
+    public Collection<String> getIdentifiers(Player player) {
         Collection<String> identifiers = new ArrayList<String>();
         for (Waypoint wp : (Collection<Waypoint>)this.players.get(player)) {
             identifiers.add(wp.getIdentifier());
@@ -193,7 +203,7 @@ public class MinimapAPI {
         return identifiers;
     }
 
-    static enum Operation {
+    private enum Operation {
         ADD, REMOVE;
     }
 }
