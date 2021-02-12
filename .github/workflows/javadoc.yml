@@ -1,4 +1,4 @@
-name: GitHub Pages Deploy Action
+name: Build + Deploy JavaDoc
 on:
   push:
     branches: [master]
