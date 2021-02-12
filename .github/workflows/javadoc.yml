@@ -23,4 +23,4 @@ jobs:
           # Write the branch name having source files for site/documentation
           BUILD_FROM: "master"
           # Write the name of the output folder where generated html is stored by makefile.
-          DOCS_FOLDER: "site"
+          DOCS_FOLDER: "target"
