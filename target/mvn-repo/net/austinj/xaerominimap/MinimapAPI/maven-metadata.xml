@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>net.austinj.xaerominimap</groupId>
+  <artifactId>MinimapAPI</artifactId>
+  <versioning>
+    <versions>
+      <version>1.0-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20210212210803</lastUpdated>
+  </versioning>
+</metadata>
