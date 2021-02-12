@@ -1,4 +1,4 @@
-ci:
+html:
 	mvn install
 	mvn compile
 	mvn package
